@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<!-- saved from url=(0039)file:///D:/MIRAE/Downloads/index_1.html -->
+<html lang="ko"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>시계부 ⏱</title>
+<script src="./index_files/xlsx.full.min.js.다운로드"></script>
+<link href="./index_files/css2" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#fdf8ff;color:#2d2040;font-family:'DM Sans',system-ui,sans-serif;min-height:100vh;padding-bottom:60px}
+.hdr{background:#fff;border-bottom:1.5px solid #ece4f8;padding:0 20px;box-shadow:0 2px 8px rgba(139,108,247,.05);position:sticky;top:0;z-index:10}
+.hdr-inner{max-width:860px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:56px}
+.logo{display:flex;align-items:center;gap:8px}
+.logo-icon{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#8b6cf7,#f06292);display:flex;align-items:center;justify-content:center;font-size:16px}
+.logo-txt{font-size:15px;font-weight:700;letter-spacing:-.02em}
+.nav-wrap{display:flex;flex-direction:column;align-items:center;gap:3px}
+.nav{display:flex;gap:6px}
+.nav-btn{padding:5px 14px;border-radius:20px;font-size:12px;font-weight:600;border:1.5px solid #ddd0f5;cursor:pointer;background:none;color:#b0a0cc;transition:all .15s;font-family:inherit}
+.nav-btn.active{background:#ede6ff;color:#8b6cf7;border-color:#8b6cf7}
+.saved-txt{font-size:10px;color:#b0a0cc}
+.upload-lbl{display:flex;align-items:center;gap:6px;border:1.5px solid rgba(139,108,247,.35);border-radius:9px;padding:5px 12px;cursor:pointer;font-size:12px;color:#8b6cf7;background:#ede6ff;font-weight:600}
+.wrap{max-width:860px;margin:0 auto;padding:0 20px}
+.drop-zone{margin-top:60px;border:2px dashed #ddd0f5;border-radius:24px;padding:60px 20px;text-align:center;cursor:pointer;background:#fff;transition:all .2s}
+.drop-zone.drag{background:#ede6ff;border-color:#8b6cf7}
+.drop-icon{font-size:52px;margin-bottom:16px}
+.drop-title{font-size:17px;font-weight:700;margin-bottom:8px}
+.drop-sub{font-size:13px;color:#b0a0cc}
+.err-box{margin-top:16px;font-size:12px;color:#e57373;background:#fdecea;border-radius:8px;padding:8px 14px;display:inline-block}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;margin-top:20px}
+.card{background:#fff;border:1.5px solid #ece4f8;border-radius:20px;padding:20px;box-shadow:0 2px 12px rgba(139,108,247,.06)}
+.card-sm{background:#fff;border:1.5px solid #ece4f8;border-radius:12px;padding:10px 12px}
+.slbl{font-size:11px;font-weight:700;color:#b0a0cc;text-transform:uppercase;letter-spacing:.07em;margin-bottom:12px}
+.big-num{font-size:24px;font-weight:700;margin-bottom:4px}
+.sub-txt{font-size:11px;color:#b0a0cc;margin-bottom:10px}
+.bar-wrap{height:6px;background:#ece4f8;border-radius:99px;overflow:hidden}
+.bar-fill{height:100%;border-radius:99px;transition:width .4s}
+.hint-txt{font-size:10px;color:#b0a0cc;margin-top:6px}
+.two-col{display:grid;grid-template-columns:1fr 240px;gap:14px}
+.col-left{display:flex;flex-direction:column;gap:14px}
+.week-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.week-title{font-size:12px;color:#b0a0cc;margin-bottom:4px}
+.week-h{font-size:20px;font-weight:700}
+.week-h span{font-size:13px;color:#b0a0cc;font-weight:400}
+.status-badge{border-radius:12px;padding:8px 14px;text-align:center;border:1.5px solid transparent}
+.status-icon{font-size:20px}
+.status-lbl{font-size:10px;font-weight:700;margin-top:2px}
+.tip-box{margin-top:10px;font-size:12px;border-radius:8px;padding:8px 10px}
+.day-grid{display:grid;grid-template-columns:40px 1fr 80px 1fr;gap:8px;align-items:center;padding:7px 0;border-bottom:1px solid #ece4f8}
+.day-hdr{display:grid;grid-template-columns:40px 1fr 80px 1fr;gap:8px;margin-bottom:8px}
+.day-name-cell{text-align:center}
+.d-name{font-size:11px;font-weight:700}
+.d-date{font-size:9px;color:#b0a0cc}
+.d-dot{width:3px;height:3px;border-radius:50%;background:#8b6cf7;margin:2px auto 0}
+.bar-row{display:flex;justify-content:space-between;font-size:10px;color:#b0a0cc;margin-bottom:3px}
+.chk-dots{display:flex;gap:2px;justify-content:center;flex-wrap:wrap}
+.chk-dot{width:16px;height:16px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;border:1.5px solid #ece4f8}
+.act-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.act-name{flex:1;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.act-bar-wrap{flex:2;height:6px;background:#ece4f8;border-radius:99px;overflow:hidden}
+.act-bar-fill{height:100%;border-radius:99px;opacity:.8}
+.act-time{font-size:12px;color:#b0a0cc;min-width:48px;text-align:right}
+.chk-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px}
+.chk-card{background:#fdf8ff;border:1.5px solid #ece4f8;border-radius:12px;padding:10px 12px}
+.chk-card-name{font-size:12px;font-weight:600;margin-bottom:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chk-days{display:flex;gap:2px;margin-bottom:6px}
+.chk-day{width:20px;height:20px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:700;border:1.5px solid #ece4f8}
+.week-list{display:flex;flex-direction:column;gap:4px}
+.week-item{display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:11px;border:1.5px solid #ece4f8;background:none;cursor:pointer;text-align:left;width:100%;transition:all .15s;font-family:inherit}
+.week-item.active{background:#ede6ff;border-color:rgba(139,108,247,.35)}
+.week-item-lbl{font-size:11px;font-weight:600;color:#2d2040;margin-bottom:3px}
+.week-item.active .week-item-lbl{color:#8b6cf7}
+.week-item-time{font-size:10px;font-weight:600;min-width:28px;text-align:right}
+.wbar{height:3px;background:#ece4f8;border-radius:99px;overflow:hidden}
+.wbar-fill{height:100%;border-radius:99px}
+.mo-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.mo-title{font-size:17px;font-weight:700}
+.mo-sub{font-size:11px;color:#b0a0cc;margin-top:2px}
+.mo-pct{font-size:22px;font-weight:700}
+.mo-pct-lbl{font-size:10px;color:#b0a0cc}
+.mo-weeks{margin-top:14px;display:flex;flex-direction:column;gap:6px}
+.mo-week{display:grid;grid-template-columns:110px 1fr 70px 70px 28px;gap:10px;align-items:center;padding:9px 12px;border-radius:11px;background:#fdf8ff;border:1px solid #ece4f8;cursor:pointer;transition:all .15s}
+.mo-week.active{background:#ede6ff;border-color:rgba(139,108,247,.25)}
+.mo-wlbl{font-size:11px;font-weight:600}
+.mo-badge{font-size:9px;background:#ede6ff;color:#8b6cf7;padding:1px 5px;border-radius:20px;font-weight:700}
+.mo-col{text-align:center}
+.mo-col-lbl{font-size:9px;color:#b0a0cc;margin-bottom:2px}
+.mo-col-val{font-size:12px;font-weight:700}
+.ring-wrap{position:absolute;top:14px;right:14px}
+.card.pos-rel{position:relative}
+.streak-card{background:#fff}
+.streak-card.active{background:linear-gradient(135deg,#e6f8ee,#fff);border-color:#a8e6c3}
+.ctrl-card.over{background:linear-gradient(135deg,#fdecea,#fff)}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-inner">
+    <div class="logo">
+      <div class="logo-icon">⏱</div>
+      <span class="logo-txt">시계부</span>
+    </div>
+    <div class="nav-wrap" id="nav-wrap" style="display:none">
+      <div class="nav">
+        <button class="nav-btn active" onclick="setView(&#39;weekly&#39;)">📅 주별</button>
+        <button class="nav-btn" onclick="setView(&#39;monthly&#39;)">🗓 월별</button>
+      </div>
+      <span class="saved-txt" id="saved-txt"></span>
+    </div>
+    <label class="upload-lbl">
+      📂 엑셀 업로드
+      <input type="file" id="file-input" accept=".xlsx,.xls" style="display:none">
+    </label>
+  </div>
+</div>
+
+<div class="wrap">
+  <div id="drop-zone" class="drop-zone" onclick="document.getElementById(&#39;file-input&#39;).click()">
+    <div class="drop-icon">🌸</div>
+    <div class="drop-title">atracker 엑셀 파일을 올려주세요</div>
+    <div class="drop-sub">태그: develop · develop|check · control</div>
+    <div class="drop-sub" style="margin-top:8px;font-size:11px">이전 데이터가 있으면 자동으로 누적돼요</div>
+    <div id="err-box" class="err-box" style="display:none"></div>
+  </div>
+  <div id="main" style="display:none"></div>
+</div>
+
+<script>
+const WEEKLY_GOAL=15, CTRL_LIMIT=2;
+const DN=["일","월","화","수","목","금","토"];
+const C={bg:"#fdf8ff",sur:"#fff",bdr:"#ece4f8",bdr2:"#ddd0f5",txt:"#2d2040",sub:"#7a6899",muted:"#b0a0cc",dev:"#8b6cf7",devL:"#ede6ff",chk:"#f06292",chkL:"#fde8f0",ctrl:"#ff7043",ctrlL:"#fff3ef",grn:"#4caf7d",grnL:"#e6f8ee",red:"#e57373",redL:"#fdecea",amb:"#f5a623"};
+
+let recs=[], weeks=[], months=[], selWeek=null, curView="weekly";
+
+// ── utils ──
+const fmtH=h=>{if(!h||h<.005)return"0분";const hh=Math.floor(h),mm=Math.round((h-hh)*60);return hh===0?`${mm}분`:mm===0?`${hh}시간`:`${hh}h ${mm}m`;};
+const toDS=v=>{if(!v)return null;if(v instanceof Date)return isNaN(v.getTime())?null:v.toISOString().slice(0,10);if(typeof v==="number"){const d=new Date((v-25569)*86400*1000);return isNaN(d.getTime())?null:d.toISOString().slice(0,10);}if(typeof v==="string"&&v.trim()){const d=new Date(v.trim().replace(" ","T"));return isNaN(d.getTime())?null:d.toISOString().slice(0,10);}return null;};
+const getMon=ds=>{const d=new Date(ds+"T12:00:00"),df=d.getDay()===0?-6:1-d.getDay();d.setDate(d.getDate()+df);return d.toISOString().slice(0,10);};
+const getWD=mon=>Array.from({length:7},(_,i)=>{const d=new Date(mon+"T12:00:00");d.setDate(d.getDate()+i);return d.toISOString().slice(0,10);});
+const wkLbl=mon=>{const a=new Date(mon+"T12:00:00"),b=new Date(mon+"T12:00:00");b.setDate(b.getDate()+6);return`${a.getMonth()+1}/${a.getDate()}–${b.getMonth()+1}/${b.getDate()}`;};
+const getYM=ds=>ds.slice(0,7);
+const isWE=ds=>{const d=new Date(ds+"T12:00:00").getDay();return d===0||d===6;};
+const dName=ds=>DN[new Date(ds+"T12:00:00").getDay()];
+const today=()=>new Date().toISOString().slice(0,10);
+const TAGS=["develop","develop|check","control"];
+
+function parse(rows){
+  const out=[];
+  for(const r of rows){
+    const name=(r["과제 이름"]??"").toString().trim();
+    const tag=(r["태그"]??"").toString().trim().toLowerCase();
+    if(!name||!TAGS.includes(tag))continue;
+    const ds=toDS(r["시작 시간"]);if(!ds)continue;
+    out.push({name,tag,date:ds,hours:parseFloat(r["기간(시간)"])||0});
+  }
+  return out;
+}
+
+function calcWS(mon){
+  const t=today(), days=getWD(mon);
+  const dev=recs.filter(r=>r.tag==="develop"&&days.includes(r.date));
+  const chk=recs.filter(r=>r.tag==="develop|check"&&days.includes(r.date));
+  const ctrl=recs.filter(r=>r.tag==="control"&&days.includes(r.date));
+  const devH=dev.reduce((s,r)=>s+r.hours,0);
+  const devD={};days.forEach(d=>{devD[d]=0;});dev.forEach(r=>{devD[r.date]=(devD[r.date]||0)+r.hours;});
+  const chkD={};days.forEach(d=>{chkD[d]=new Set();});chk.forEach(r=>{if(r.hours>=1/60)chkD[r.date].add(r.name);});
+  const chkA=[...new Set(chk.map(r=>r.name))];
+  const ctD={};days.forEach(d=>{ctD[d]=0;});ctrl.forEach(r=>{ctD[r.date]=(ctD[r.date]||0)+r.hours;});
+  const isCur=days.includes(t),isPast=days[6]<t;
+  return{mon,days,devH,devD,chkD,chkA,ctD,isCur,isPast,achieved:isPast&&devH>=WEEKLY_GOAL,failed:isPast&&devH<WEEKLY_GOAL};
+}
+
+function wkSt(ws){
+  if(ws.achieved)return{i:"✅",c:C.grn,bg:C.grnL,l:"달성"};
+  if(ws.isCur)return{i:"⏳",c:C.dev,bg:C.devL,l:"진행중"};
+  if(ws.failed)return{i:"❌",c:C.red,bg:C.redL,l:"미달"};
+  return{i:"—",c:C.muted,bg:C.bdr,l:"예정"};
+}
+
+function ringHTML(pct,color,bg,sz=52){
+  const r=(sz-8)/2,c=2*Math.PI*r,off=c-(Math.min(100,Math.max(0,pct))/100)*c;
+  return`<svg width="${sz}" height="${sz}" style="transform:rotate(-90deg)"><circle cx="${sz/2}" cy="${sz/2}" r="${r}" fill="none" stroke="${bg}" stroke-width="5"/><circle cx="${sz/2}" cy="${sz/2}" r="${r}" fill="none" stroke="${color}" stroke-width="5" stroke-dasharray="${c}" stroke-dashoffset="${off}" stroke-linecap="round" style="transition:stroke-dashoffset .5s"/></svg>`;
+}
+
+function barHTML(pct,color,bg,h=6){
+  return`<div class="bar-wrap" style="height:${h}px;background:${bg||C.bdr}"><div class="bar-fill" style="width:${Math.min(100,Math.max(0,pct))}%;background:${color};height:${h}px"></div></div>`;
+}
+
+// ── storage ──
+function saveData(){
+  try{
+    localStorage.setItem("timeLedger_records",JSON.stringify(recs));
+    const now=new Date().toLocaleString("ko-KR");
+    localStorage.setItem("timeLedger_meta",JSON.stringify({savedAt:now}));
+    const el=document.getElementById("saved-txt");
+    if(el)el.textContent="마지막 저장: "+now;
+  }catch(e){console.warn("저장 실패",e);}
+}
+
+function loadSaved(){
+  try{
+    const s=localStorage.getItem("timeLedger_records");
+    if(s){const p=JSON.parse(s);if(p?.length)return p;}
+  }catch(e){}
+  return null;
+}
+
+// ── apply & render ──
+function applyRecs(p){
+  recs=p;
+  weeks=[...new Set(p.map(r=>getMon(r.date)))].sort();
+  months=[...new Set(p.map(r=>getYM(r.date)))].sort();
+  selWeek=weeks[weeks.length-1];
+  document.getElementById("drop-zone").style.display="none";
+  document.getElementById("main").style.display="block";
+  document.getElementById("nav-wrap").style.display="flex";
+  const meta=localStorage.getItem("timeLedger_meta");
+  if(meta){try{const m=JSON.parse(meta);const el=document.getElementById("saved-txt");if(el)el.textContent="마지막 저장: "+m.savedAt;}catch(e){}}
+  render();
+}
+
+function setView(v){
+  curView=v;
+  document.querySelectorAll(".nav-btn").forEach((b,i)=>b.classList.toggle("active",["weekly","monthly"][i]===v));
+  render();
+}
+
+function render(){
+  if(curView==="weekly")renderWeekly();
+  else renderMonthly();
+}
+
+function renderWeekly(){
+  const t=today();
+  const allWS=weeks.map(m=>calcWS(m));
+  const curW=allWS.find(w=>w.isCur);
+  const curH=curW?.devH||0, curDays=curW?.days||[];
+  const remD=curDays.filter(d=>d>=t).length, remH=Math.max(0,WEEKLY_GOAL-curH);
+  const past=allWS.filter(w=>w.isPast).reverse();
+  let streak=0;for(const w of past){if(w.achieved)streak++;else break;}
+  const totalP=allWS.filter(w=>w.isPast).length, totalA=allWS.filter(w=>w.achieved).length;
+  const todayCtrl=(curW?.ctD||{})[t]||0, ctrlOver=todayCtrl>CTRL_LIMIT;
+  const cur=allWS.find(w=>w.mon===selWeek)||allWS[allWS.length-1];
+
+  let html=`<div class="grid3">`;
+  // develop card
+  html+=`<div class="card pos-rel">
+    <div class="ring-wrap">${ringHTML(Math.min(100,(curH/WEEKLY_GOAL)*100),curH>=WEEKLY_GOAL?C.grn:C.dev,curH>=WEEKLY_GOAL?C.grnL:C.devL)}</div>
+    <div class="slbl" style="color:${C.dev}">develop 🖥</div>
+    <div class="big-num">${fmtH(curH)}</div>
+    <div class="sub-txt">${curH>=WEEKLY_GOAL?"🎉 달성!":remD>0?`${fmtH(remH)} 남음 · 하루 ${fmtH(remH/remD)}씩`:`${fmtH(remH)} 미달`}</div>
+    ${barHTML((curH/WEEKLY_GOAL)*100,curH>=WEEKLY_GOAL?C.grn:C.dev)}
+    <div class="hint-txt">주간 목표 ${WEEKLY_GOAL}h</div>
+  </div>`;
+  // streak card
+  html+=`<div class="card streak-card${streak>0?" active":""}">
+    <div class="slbl" style="color:${streak>0?C.grn:C.muted}">연속 달성 🔥</div>
+    <div class="big-num" style="color:${streak>0?C.grn:C.txt}">${streak}주</div>
+    <div class="sub-txt">${streak===0?"아직 연속 달성 없음":streak>=4?"꾸준해요! 👏":streak>=2?"잘 하고 있어요!":"이번 주도 달성해봐요!"}</div>
+    <div style="font-size:11px;color:${C.sub}">전체 ${totalA}/${totalP}주 (${totalP>0?Math.round((totalA/totalP)*100):0}%)</div>
+  </div>`;
+  // control card
+  html+=`<div class="card pos-rel ctrl-card${ctrlOver?" over":""}">
+    <div class="ring-wrap">${ringHTML(Math.min(100,(todayCtrl/CTRL_LIMIT)*100),ctrlOver?C.red:C.ctrl,ctrlOver?C.redL:C.ctrlL)}</div>
+    <div class="slbl" style="color:${C.ctrl}">control 🎮</div>
+    <div class="big-num" style="color:${ctrlOver?C.red:C.txt}">${fmtH(todayCtrl)}</div>
+    <div class="sub-txt" style="color:${ctrlOver?C.red:C.muted}">${ctrlOver?`⚠️ ${fmtH(todayCtrl-CTRL_LIMIT)} 초과`:`오늘 ${fmtH(Math.max(0,CTRL_LIMIT-todayCtrl))} 여유`}</div>
+    ${barHTML((todayCtrl/CTRL_LIMIT)*100,ctrlOver?C.red:C.ctrl,ctrlOver?C.redL:C.bdr)}
+    <div class="hint-txt">하루 ${CTRL_LIMIT}h 미만 목표</div>
+  </div></div>`;
+
+  if(cur){
+    const st=wkSt(cur);
+    html+=`<div class="two-col"><div class="col-left">`;
+    // week summary
+    html+=`<div class="card">
+      <div class="week-hdr">
+        <div><div class="week-title">${wkLbl(cur.mon)}</div>
+          <div class="week-h">${fmtH(cur.devH)} <span>/ ${WEEKLY_GOAL}h</span></div>
+        </div>
+        <div class="status-badge" style="background:${st.bg};border-color:${st.c}55">
+          <div class="status-icon">${st.i}</div>
+          <div class="status-lbl" style="color:${st.c}">${st.l}</div>
+        </div>
+      </div>
+      ${barHTML((cur.devH/WEEKLY_GOAL)*100,cur.achieved?C.grn:cur.isCur?C.dev:C.red,null,8)}
+      ${cur.isCur&&remH>0?`<div class="tip-box" style="color:${C.dev};background:${C.devL}">💡 ${fmtH(remH)} 남음 · 남은 ${remD}일 하루 ${fmtH(remH/Math.max(1,remD))}씩</div>`:""}
+      ${cur.failed?`<div class="tip-box" style="color:${C.red};background:${C.redL}">📉 ${fmtH(WEEKLY_GOAL-cur.devH)} 부족</div>`:""}
+    </div>`;
+
+    // daily
+    html+=`<div class="card"><div class="slbl">요일별 현황</div>
+      <div class="day-hdr">
+        <div></div>
+        <div style="font-size:10px;font-weight:700;color:${C.dev};text-align:center">develop</div>
+        <div style="font-size:10px;font-weight:700;color:${C.chk};text-align:center">check</div>
+        <div style="font-size:10px;font-weight:700;color:${C.ctrl};text-align:center">control</div>
+      </div>`;
+    cur.days.forEach(day=>{
+      const dH=cur.devD[day]||0,ctH=cur.ctD[day]||0,chkS=cur.chkD[day]||new Set();
+      const goal=isWE(day)?3:2,over=ctH>CTRL_LIMIT,isT=day===t,isFut=day>t;
+      html+=`<div class="day-grid" style="opacity:${isFut?.3:1}">
+        <div class="day-name-cell">
+          <div class="d-name" style="color:${isWE(day)?C.amb:isT?C.dev:C.sub}">${dName(day)}</div>
+          <div class="d-date">${day.slice(5)}</div>
+          ${isT?`<div class="d-dot"></div>`:""}
+        </div>
+        <div>
+          <div class="bar-row"><span style="color:${dH>0?C.dev:C.muted};font-weight:600">${dH>0?fmtH(dH):"—"}</span><span style="color:${dH>=goal?C.grn:C.muted}">${dH>=goal?"✓":`/${goal}h`}</span></div>
+          ${barHTML((dH/goal)*100,dH>=goal?C.grn:C.dev)}
+        </div>
+        <div style="text-align:center">${cur.chkA.length===0?`<span style="font-size:11px;color:${C.muted}">—</span>`:
+          `<div class="chk-dots">${cur.chkA.map(a=>{const ok=chkS.has(a);return`<div class="chk-dot" title="${a}" style="background:${ok?C.chkL:C.bg};border-color:${ok?C.chk+"55":C.bdr};color:${ok?C.chk:C.muted}">${ok?"✓":""}</div>`;}).join("")}</div>`}
+        </div>
+        <div>
+          <div class="bar-row"><span style="color:${over?C.red:ctH>0?C.ctrl:C.muted};font-weight:600">${ctH>0?fmtH(ctH):"—"}</span><span style="color:${over?C.red:C.muted}">${over?"↑":`<${CTRL_LIMIT}h`}</span></div>
+          ${barHTML((ctH/CTRL_LIMIT)*100,over?C.red:C.ctrl,over?C.redL:C.bdr)}
+        </div>
+      </div>`;
+    });
+    html+=`</div>`;
+
+    // develop acts
+    const am={};recs.filter(r=>r.tag==="develop"&&cur.days.includes(r.date)).forEach(r=>{am[r.name]=(am[r.name]||0)+r.hours;});
+    const acts=Object.entries(am).sort((a,b)=>b[1]-a[1]);
+    const mx=Math.max(...acts.map(a=>a[1]),.01);
+    html+=`<div class="card"><div class="slbl">develop 활동</div>${acts.length===0?`<div style="font-size:13px;color:${C.muted}">기록 없음</div>`:acts.map(([n,h])=>`<div class="act-row"><span class="act-name">${n}</span><div class="act-bar-wrap"><div class="act-bar-fill" style="width:${(h/mx)*100}%;background:${C.dev}"></div></div><span class="act-time">${fmtH(h)}</span></div>`).join("")}</div>`;
+
+    // check acts
+    if(cur.chkA.length>0){
+      html+=`<div class="card"><div class="slbl" style="color:${C.chk}">develop|check</div><div class="chk-cards">`;
+      cur.chkA.forEach(act=>{
+        const cnt=cur.days.filter(d=>cur.chkD[d]?.has(act)).length;
+        html+=`<div class="chk-card"><div class="chk-card-name">${act}</div><div class="chk-days">${cur.days.map(d=>{const ok=cur.chkD[d]?.has(act);return`<div class="chk-day" style="background:${ok?C.chkL:C.sur};border-color:${ok?C.chk+"55":C.bdr};color:${ok?C.chk:C.muted}">${dName(d)}</div>`;}).join("")}</div><div style="font-size:10px;color:${cnt>0?C.chk:C.muted}">${cnt}/7일</div></div>`;
+      });
+      html+=`</div></div>`;
+    }
+
+    html+=`</div>`;// col-left end
+
+    // week list (right)
+    html+=`<div class="card" style="align-self:start"><div class="slbl">주차 목록</div><div class="week-list">`;
+    [...allWS].reverse().forEach(w=>{
+      const st=wkSt(w),pct=Math.min(100,(w.devH/WEEKLY_GOAL)*100),isSel=selWeek===w.mon;
+      html+=`<button class="week-item${isSel?" active":""}" onclick="selWeek='${w.mon}';render()">
+        <span style="font-size:14px">${st.i}</span>
+        <div style="flex:1;min-width:0">
+          <div class="week-item-lbl">${wkLbl(w.mon)}</div>
+          <div class="wbar"><div class="wbar-fill" style="width:${pct}%;background:${w.achieved?C.grn:w.isCur?C.dev:w.failed?C.red:C.muted}"></div></div>
+        </div>
+        <span class="week-item-time" style="color:${st.c}">${fmtH(w.devH)}</span>
+      </button>`;
+    });
+    html+=`</div></div></div>`;// two-col end
+  }
+
+  document.getElementById("main").innerHTML=html;
+}
+
+function renderMonthly(){
+  const allWS=weeks.map(m=>calcWS(m));
+  let html=`<div style="display:flex;flex-direction:column;gap:14px;margin-top:20px">`;
+  months.slice().reverse().forEach(ym=>{
+    const mw=allWS.filter(w=>getWD(w.mon).some(d=>getYM(d)===ym));
+    const ach=mw.filter(w=>w.achieved).length;
+    const mH=recs.filter(r=>r.tag==="develop"&&getYM(r.date)===ym).reduce((s,r)=>s+r.hours,0);
+    const mG=mw.filter(w=>w.isPast).length*WEEKLY_GOAL;
+    const ctrlOvD=mw.reduce((s,w)=>s+w.days.filter(d=>getYM(d)===ym&&(w.ctD[d]||0)>CTRL_LIMIT).length,0);
+    const [y,m]=ym.split("-");
+    html+=`<div class="card">
+      <div class="mo-hdr">
+        <div><div class="mo-title">${y}년 ${parseInt(m)}월</div>
+          <div class="mo-sub">완료 ${mw.filter(w=>w.isPast).length}주 · develop ${ach}주 달성 · control 초과 ${ctrlOvD}일</div>
+        </div>
+        <div style="text-align:right">
+          <div class="mo-pct" style="color:${mG>0&&mH>=mG?C.grn:C.dev}">${mG>0?Math.round((mH/mG)*100)+"%":"—"}</div>
+          <div class="mo-pct-lbl">develop 달성률</div>
+        </div>
+      </div>
+      ${barHTML(mG>0?Math.min(100,(mH/mG)*100):0,mG>0&&mH>=mG?C.grn:C.dev,null,6)}
+      <div class="mo-weeks">`;
+    mw.forEach(w=>{
+      const st=wkSt(w),pct=Math.min(100,(w.devH/WEEKLY_GOAL)*100);
+      const ctOv=w.days.filter(d=>getYM(d)===ym&&(w.ctD[d]||0)>CTRL_LIMIT).length;
+      const isSel=selWeek===w.mon;
+      html+=`<div class="mo-week${isSel?" active":""}" onclick="selWeek='${w.mon}';setView('weekly')">
+        <div><div class="mo-wlbl">${wkLbl(w.mon)}</div>${w.isCur?`<span class="mo-badge">진행중</span>`:""}</div>
+        <div>
+          <div class="bar-row"><span style="color:${C.dev};font-weight:600">${fmtH(w.devH)}</span><span style="color:${w.achieved?C.grn:w.failed?C.red:C.muted}">${w.achieved?"달성!":w.isCur?`${fmtH(Math.max(0,WEEKLY_GOAL-w.devH))} 남음`:w.failed?`${fmtH(WEEKLY_GOAL-w.devH)} 부족`:"—"}</span></div>
+          ${barHTML(pct,w.achieved?C.grn:w.isCur?C.dev:w.failed?C.red:C.muted)}
+        </div>
+        <div class="mo-col"><div class="mo-col-lbl">control</div><div class="mo-col-val" style="color:${ctOv>0?C.red:C.grn}">${ctOv>0?ctOv+"일 초과":"정상"}</div></div>
+        <div class="mo-col"><div class="mo-col-lbl">check</div><div class="mo-col-val" style="color:${C.chk}">${w.days.filter(d=>getYM(d)===ym&&[...Object.values(w.chkD)].some(s=>s instanceof Set&&w.days.includes(d)&&s.size>0&&w.chkD[d]?.size>0)).length}일</div></div>
+        <div style="font-size:16px;text-align:center">${st.i}</div>
+      </div>`;
+    });
+    html+=`</div></div>`;
+  });
+  html+=`</div>`;
+  document.getElementById("main").innerHTML=html;
+}
+
+// ── file handling ──
+document.getElementById("file-input").addEventListener("change",e=>{
+  const f=e.target.files[0];if(f)handleFile(f);e.target.value="";
+});
+
+function handleFile(file){
+  const rd=new FileReader();
+  rd.onload=e=>{
+    try{
+      const wb=XLSX.read(new Uint8Array(e.target.result),{type:"array",cellDates:true});
+      const rows=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{defval:""});
+      if(!rows.length){showErr("데이터 없음");return;}
+      const p=parse(rows);
+      if(!p.length){showErr("파싱 실패. 컬럼: "+Object.keys(rows[0]).join(", "));return;}
+      // merge
+      let merged=p;
+      const saved=loadSaved();
+      if(saved){
+        const seen=new Set(p.map(r=>`${r.name}|${r.tag}|${r.date}|${r.hours}`));
+        const oldOnly=saved.filter(r=>!seen.has(`${r.name}|${r.tag}|${r.date}|${r.hours}`));
+        merged=[...oldOnly,...p].sort((a,b)=>a.date.localeCompare(b.date));
+      }
+      applyRecs(merged);
+      saveData();
+    }catch(ex){showErr("오류: "+ex.message);}
+  };
+  rd.readAsArrayBuffer(file);
+}
+
+function showErr(msg){
+  const el=document.getElementById("err-box");
+  if(el){el.textContent="⚠️ "+msg;el.style.display="inline-block";}
+}
+
+// drag & drop
+const dz=document.getElementById("drop-zone");
+dz.addEventListener("dragover",e=>{e.preventDefault();dz.classList.add("drag");});
+dz.addEventListener("dragleave",()=>dz.classList.remove("drag"));
+dz.addEventListener("drop",e=>{e.preventDefault();dz.classList.remove("drag");const f=e.dataTransfer.files[0];if(f)handleFile(f);});
+
+// init: load saved
+const saved=loadSaved();
+if(saved&&saved.length){applyRecs(saved);}
+</script>
+
+
+</body></html>
